@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Haustier-Notfall</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+input, textarea, button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+button {
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+}
+.hidden {
+  display: none;
+}
+.section {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🐾 Haustier-Notfallinformationen</h1>
+<p>Diese Daten werden nur auf Ihrem Smartphone gespeichert.</p>
+
+<div id="formSection">
+  <input id="petType" placeholder="Art des Haustiers">
+  <input id="petCount" placeholder="Anzahl der Tiere">
+  <textarea id="address" placeholder="Adresse der Tiere"></textarea>
+  <input id="contactName" placeholder="Notfallkontakt (Name)">
+  <input id="contactPhone" placeholder="Telefonnummer">
+  <textarea id="notes" placeholder="Besondere Hinweise"></textarea>
+
+  <button onclick="saveData()">Notfalldaten speichern</button>
+</div>
+
+<div id="displaySection" class="section hidden">
+  <h2>🚨 Notfallansicht</h2>
+  <p><strong>Haustier:</strong> <span id="oPet"></span></p>
+  <p><strong>Anzahl:</strong> <span id="oCount"></span></p>
+  <p><strong>Adresse:</strong> <span id="oAddress"></span></p>
+  <p><strong>Kontakt:</strong> <span id="oContact"></span></p>
+  <p><strong>Telefon:</strong> <span id="oPhone"></span></p>
+  <p><strong>Hinweise:</strong> <span id="oNotes"></span></p>
+
+  <hr>
+  <p><strong>🔐 Persönlicher Backup-Link:</strong></p>
+  <p id="backupLink"></p>
+</div>
+
+<script>
+function generateCode() {
+  return Math.random().toString(36).substring(2, 10).toUpperCase();
+}
+
+function saveData() {
+  const code = localStorage.getItem("emergencyCode") || generateCode();
+
+  const data = {
+    petType: petType.value,
+    petCount: petCount.value,
+    address: address.value,
+    contactName: contactName.value,
+    contactPhone: contactPhone.value,
+    notes: notes.value,
+    code: code
+  };
+
+  localStorage.setItem("emergencyData", JSON.stringify(data));
+  localStorage.setItem("emergencyCode", code);
+
+  showData();
+}
+
+function showData() {
+  const data = JSON.parse(localStorage.getItem("emergencyData"));
+  if (!data) return;
+
+  oPet.textContent = data.petType;
+  oCount.textContent = data.petCount;
+  oAddress.textContent = data.address;
+  oContact.textContent = data.contactName;
+  oPhone.textContent = data.contactPhone;
+  oNotes.textContent = data.notes || "-";
+
+  const link = window.location.origin + window.location.pathname + "?code=" + data.code;
+  backupLink.innerHTML = `<a href="${link}">${link}</a>`;
+
+  formSection.classList.add("hidden");
+  displaySection.classList.remove("hidden");
+}
+
+if (localStorage.getItem("emergencyData")) {
+  showData();
+}
+</script>
+
+</body>
+</html> 
+

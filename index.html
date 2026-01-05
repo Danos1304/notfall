@@ -99,7 +99,7 @@ function showData() {
   oPhone.textContent = data.contactPhone;
   oNotes.textContent = data.notes || "-";
 
-  const link = window.location.origin + window.location.pathname + "?code=" + data.code;
+  const link = "https://sites.google.com/view/haustier-notfall";
   backupLink.innerHTML = `<a href="${link}">${link}</a>`;
 
   formSection.classList.add("hidden");
